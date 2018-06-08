@@ -25,8 +25,9 @@ public:
     virtual void drawLine(const QLineF& line, QPainter& painter);
     virtual void drawLines(const LineSet& ls, QPainter& painter);
 
-//    virtual void drawRect(const QRectF &rectangle);
-//    virtual void drawEllipse(const QPointF &center, qreal rx, qreal ry);
+    virtual void drawRect(const QRectF &rectangle, QPainter& painter);
+    virtual void drawEllipse(const QPointF &center, qreal rx, qreal ry, QPainter& painter);
+    virtual void drawCursor(const QPointF &cursor, const QRect& rect, QPainter& painter);
 
 signals:
 
@@ -51,15 +52,17 @@ public:
     virtual void drawLine(const QLineF &line, QPainter& painter);
     virtual void drawLines(const LineSet& ls, QPainter& painter);
 
+    virtual void drawRect(const QRectF &rectangle, QPainter& painter);
+    virtual void drawEllipse(const QPointF &center, qreal rx, qreal ry, QPainter& painter);
 };
 
 /**
  * @brief 只使用Qt图形绘制API的画点API，CPU绘制
  */
-class MCadPaintEngine : public PaintEngine
+class StupidPaintEngine : public PaintEngine
 {
 public:
-    explicit MCadPaintEngine(QObject* parent = 0);
+    explicit StupidPaintEngine(QObject* parent = 0);
 
     virtual void drawPoint(qreal x, qreal y, QPainter& painter);
     virtual void drawLine(qreal x1, qreal y1, qreal x2, qreal y2, QPainter& painter);

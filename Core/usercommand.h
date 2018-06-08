@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QMouseEvent>
 
+#include "paintengine.h"
+
 struct CommandResult
 {
     QList<qreal> figures;
@@ -32,7 +34,7 @@ public:
 
     virtual void proceed(const QMouseEvent* event) = 0;
     virtual void move(const QMouseEvent* event){m_cursor_pos = event->localPos();}
-    virtual void paint(const QPaintEvent* event, QPainter& painter) = 0;
+    virtual void paint(const QPaintEvent* event, QPainter& painter, PaintEngine*) = 0;
     virtual void end(){m_state = Idle;}
     virtual QString hint() = 0;
 
@@ -43,7 +45,6 @@ protected:
     int m_steps;
 
     QPointF cursor_pos(){return m_cursor_pos;}
-    void    draw_cursor(QPointF point, QRect region, QPainter& painter);
 
 signals:
 
@@ -58,7 +59,7 @@ public:
     explicit PlaceLine(QObject *parent = 0);
 
     virtual void proceed(const QMouseEvent* event);
-    virtual void paint(const QPaintEvent* event, QPainter& painter);
+    virtual void paint(const QPaintEvent* event, QPainter& painter, PaintEngine* engine);
     virtual QString hint();
 
 private:
@@ -71,7 +72,7 @@ public:
     explicit PlaceCircle(QObject *parent = 0);
 
     virtual void proceed(const QMouseEvent* event);
-    virtual void paint(const QPaintEvent* event, QPainter& painter);
+    virtual void paint(const QPaintEvent* event, QPainter& painter, PaintEngine* engine);
     virtual QString hint();
 
 private:

@@ -36,6 +36,65 @@ void PaintEngine::drawLines(const PaintEngine::LineSet &ls, QPainter &painter)
     }
 }
 
+void PaintEngine::drawRect(const QRectF &rect, QPainter &painter)
+{
+    drawLine(rect.topLeft(),rect.topRight(),painter);
+    drawLine(rect.topRight(),rect.bottomRight(),painter);
+    drawLine(rect.bottomRight(),rect.bottomLeft(),painter);
+    drawLine(rect.bottomLeft(),rect.topLeft(),painter);
+}
+
+void PaintEngine::drawEllipse(const QPointF &center, qreal rx, qreal ry, QPainter &painter)
+{
+    if(rx <= 0 || ry <=0)return;
+
+    qreal a = rx;
+    qreal b = ry;
+    qreal d = b*b + a*a*(-b + 0.25);
+    int x = 0, y = b;
+    int fx = a*a / sqrt((float)a*a + b*b);
+
+    while (x != fx)
+    {
+         if (d < 0)
+            d += b*b*(2 * x + 3);
+        else
+        {
+            --y;
+            d += b*b*(2 * x + 3) + a*a*(-2 * y + 2);
+        }
+        ++x;
+        drawPoint(center.x() + x, center.y() + y, painter);
+        drawPoint(center.x() - x, center.y() + y, painter);
+        drawPoint(center.x() + x, center.y() - y, painter);
+        drawPoint(center.x() - x, center.y() - y, painter);
+    }
+    //中点改为(x+0.5,y-1)所以d =
+    d = b*b*(x + 0.5)*(x + 0.5) + a*a*(y - 1)*(y - 1) - a*a*b*b;
+    while (y > 0)
+    {
+        if (d < 0)
+        {
+            ++x;
+            d += b*b*(2 * x + 2) + a*a*(-2 * y + 3);
+        }
+        else
+            d += a*a*(-2 * y + 3);
+        --y;
+        drawPoint(center.x() + x, center.y() + y, painter);
+        drawPoint(center.x() - x, center.y() + y, painter);
+        drawPoint(center.x() + x, center.y() - y, painter);
+        drawPoint(center.x() - x, center.y() - y, painter);
+    }
+}
+
+void PaintEngine::drawCursor(const QPointF &cursor, const QRect &rect, QPainter &painter)
+{
+    drawLine(0,cursor.y(),rect.width(),cursor.y(),painter);
+    drawLine(cursor.x(),0,cursor.x(),rect.height(),painter);
+    drawEllipse(cursor,1,1,painter);
+}
+
 
 QtPaintEngine::QtPaintEngine(QObject *parent):
     PaintEngine(parent)
@@ -78,20 +137,30 @@ void QtPaintEngine::drawLines(const PaintEngine::LineSet &ls, QPainter &painter)
     painter.drawLines(ls);
 }
 
+void QtPaintEngine::drawRect(const QRectF &rect, QPainter &painter)
+{
+    painter.drawRect(rect);
+}
+
+void QtPaintEngine::drawEllipse(const QPointF &center, qreal rx, qreal ry, QPainter &painter)
+{
+    painter.drawEllipse(center,rx,ry);
+}
 
 
-MCadPaintEngine::MCadPaintEngine(QObject *parent):
+
+StupidPaintEngine::StupidPaintEngine(QObject *parent):
     PaintEngine(parent)
 {
 
 }
 
-void MCadPaintEngine::drawPoint(qreal x, qreal y, QPainter &painter)
+void StupidPaintEngine::drawPoint(qreal x, qreal y, QPainter &painter)
 {
     painter.drawPoint(x,y);
 }
 
-void MCadPaintEngine::drawLine(qreal x1, qreal y1, qreal x2, qreal y2, QPainter &painter)
+void StupidPaintEngine::drawLine(qreal x1, qreal y1, qreal x2, qreal y2, QPainter &painter)
 {
     //Bresenham 直线生成算法
     qreal dx = x2 - x1;

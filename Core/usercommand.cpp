@@ -16,18 +16,6 @@ UserCommand::UserCommand(QObject *parent):
 
 }
 
-void UserCommand::draw_cursor(QPointF point, QRect region, QPainter &painter)
-{
-    painter.save();
-    painter.setPen(CURSOR_COLOR);
-    painter.drawLine(0,point.y(),region.width(),point.y());
-    painter.drawLine(point.x(),0,point.x(),region.height());
-    painter.setBrush(POINT_COLOR);
-    painter.setPen(POINT_COLOR);
-    painter.drawEllipse(point,1,1);
-    painter.restore();
-}
-
 MCadCommand::PlaceLine::PlaceLine(QObject *parent):
     UserCommand(parent)
 {
@@ -50,18 +38,21 @@ void MCadCommand::PlaceLine::proceed(const QMouseEvent *event)
     ++m_steps;
 }
 
-void MCadCommand::PlaceLine::paint(const QPaintEvent* event, QPainter& painter)
+void MCadCommand::PlaceLine::paint(const QPaintEvent* event, QPainter& painter, PaintEngine* engine)
 {
     painter.save();
     painter.setPen(DRAWING_COLOR);
     if(m_state == Idle)
     {
-        draw_cursor(cursor_pos(),event->rect(),painter);
+        painter.save();
+        painter.setPen(Qt::darkMagenta);
+        engine->drawCursor(cursor_pos(),event->rect(),painter);
+        painter.restore();
     }
     else
     {
-        painter.drawLine(cursor_pos(),m_center);
-        draw_cursor(cursor_pos(),event->rect(),painter);
+        engine->drawLine(cursor_pos(),m_center,painter);
+        engine->drawCursor(cursor_pos(),event->rect(),painter);
     }
     painter.restore();
 }
@@ -103,19 +94,22 @@ void MCadCommand::PlaceCircle::proceed(const QMouseEvent *event)
     ++m_steps;
 }
 
-void MCadCommand::PlaceCircle::paint(const QPaintEvent* event, QPainter& painter)
+void MCadCommand::PlaceCircle::paint(const QPaintEvent* event, QPainter& painter, PaintEngine* engine)
 {
     painter.save();
     painter.setPen(DRAWING_COLOR);
     if(m_state == Idle)
     {
-        draw_cursor(cursor_pos(),event->rect(),painter);
+        painter.save();
+        painter.setPen(Qt::darkMagenta);
+        engine->drawCursor(cursor_pos(),event->rect(),painter);
+        painter.restore();
     }
     else
     {
         qreal radius = MCadUtil::distance(m_center,cursor_pos());
-        draw_cursor(cursor_pos(),event->rect(),painter);
-        painter.drawEllipse(m_center,radius,radius);
+        engine->drawCursor(cursor_pos(),event->rect(),painter);
+        engine->drawEllipse(m_center,radius,radius,painter);
     }
     painter.restore();
 }
