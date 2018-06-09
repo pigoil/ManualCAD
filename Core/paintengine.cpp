@@ -46,6 +46,7 @@ void PaintEngine::drawRect(const QRectF &rect, QPainter &painter)
 
 void PaintEngine::drawEllipse(const QPointF &center, qreal rx, qreal ry, QPainter &painter)
 {
+    //Bresenham 算法画椭圆
     if(rx <= 0 || ry <=0)return;
 
     qreal a = rx;
@@ -69,7 +70,6 @@ void PaintEngine::drawEllipse(const QPointF &center, qreal rx, qreal ry, QPainte
         drawPoint(center.x() + x, center.y() - y, painter);
         drawPoint(center.x() - x, center.y() - y, painter);
     }
-    //中点改为(x+0.5,y-1)所以d =
     d = b*b*(x + 0.5)*(x + 0.5) + a*a*(y - 1)*(y - 1) - a*a*b*b;
     while (y > 0)
     {

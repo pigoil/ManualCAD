@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>ManualCAD</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resource.qrc">
+    <normaloff>:/icons/Resource/M.png</normaloff>:/icons/Resource/M.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -27,9 +31,9 @@
     <property name="title">
      <string>绘图引擎</string>
     </property>
-    <addaction name="action1"/>
-    <addaction name="action2"/>
-    <addaction name="action3"/>
+    <addaction name="actionUseStupid"/>
+    <addaction name="actionUseQtGui"/>
+    <addaction name="actionUseOpenGL"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
@@ -75,7 +79,7 @@
    <addaction name="actiond"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="action1">
+  <action name="actionUseStupid">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -86,7 +90,7 @@
     <string>Stupid模式</string>
    </property>
   </action>
-  <action name="action2">
+  <action name="actionUseQtGui">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -94,7 +98,7 @@
     <string>Qt内嵌模式</string>
    </property>
   </action>
-  <action name="action3">
+  <action name="actionUseOpenGL">
    <property name="checkable">
     <bool>true</bool>
    </property>

@@ -6,5 +6,7 @@
         <file>Resource/rectangle.png</file>
         <file>Resource/select.png</file>
         <file>Resource/text.png</file>
+        <file>Resource/logo.png</file>
+        <file>Resource/M.png</file>
     </qresource>
 </RCC>
