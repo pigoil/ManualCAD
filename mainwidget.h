@@ -2,6 +2,8 @@
 #define MAINWIDGET_H
 
 #include <QWidget>
+#include <QGLWidget>
+
 #include "paintengine.h"
 #include "usercommand.h"
 
@@ -23,17 +25,19 @@ protected:
     virtual void paintEvent(QPaintEvent *e);
     virtual void mouseMoveEvent(QMouseEvent* e);
     virtual void mousePressEvent(QMouseEvent* e);
-    //virtual bool event(QEvent *event){}
+    virtual void resizeEvent(QResizeEvent* e);
 
 private:
+    QGLWidget*   m_glwidget;
     PaintEngine* m_paint_engines[CNT_ENGINE_TYPE];
     PaintEngine* m_current_engine;
-    UserCommand* m_command;
     bool         m_use_opengl;
+
+    UserCommand* m_command;
 
 signals:
     void displayHint(QString);
-    void displaySPF(QString);
+    void displaySPF(int);
 
 public slots:
     void setEngineType(EngineType type);
