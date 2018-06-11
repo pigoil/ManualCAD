@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QHBoxLayout>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,13 +12,16 @@ MainWindow::MainWindow(QWidget *parent) :
     mcad_widget = new MCadWidget(this);
     setCentralWidget(mcad_widget);
     connect(mcad_widget,SIGNAL(displayHint(QString)),this,SLOT(slot_hint(QString)));
-    connect(mcad_widget,SIGNAL(displaySPF(QString)),this,SLOT(slot_spf(QString)));
+    connect(mcad_widget,SIGNAL(displaySPF(int)),this,SLOT(slot_spf(int)));
 
     labelHint = new QLabel("选择");
-    labelSPF = new QLabel("   ");
+    labelSPF = new QLabel;
+
     ui->statusBar->addWidget(labelHint);
-    ui->statusBar->addWidget(new QLabel("SPF:"));
-    ui->statusBar->addWidget(labelSPF);
+    ui->statusBar->addPermanentWidget(new QLabel("SPF(us):"));
+    ui->statusBar->addPermanentWidget(labelSPF);
+
+    labelHint->setStyleSheet("color:red");
 
     QActionGroup* g = new QActionGroup(this);
     g->addAction(ui->actionUseStupid);
@@ -52,7 +56,21 @@ void MainWindow::slot_hint(QString s)
     labelHint->setText(s);
 }
 
-void MainWindow::slot_spf(QString s)
+void MainWindow::slot_spf(int n)
 {
+    QString s = QString("%1").arg(n/1000, 5, 10, QChar(' '));
     labelSPF->setText(s);
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    QString s("MaunalCAD \
+              dsadsadas");
+    QMessageBox::about(this,"关于",s);
+
+}
+
+void MainWindow::on_actionAboutQt_triggered()
+{
+    QMessageBox::aboutQt(this);
 }

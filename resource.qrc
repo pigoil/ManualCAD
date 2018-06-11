@@ -8,5 +8,6 @@
         <file>Resource/text.png</file>
         <file>Resource/logo.png</file>
         <file>Resource/M.png</file>
+        <file>Resource/cross.png</file>
     </qresource>
 </RCC>
