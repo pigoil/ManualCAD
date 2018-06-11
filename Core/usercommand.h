@@ -6,12 +6,12 @@
 
 #include "paintengine.h"
 
-struct CommandResult
-{
-    QList<qreal> figures;
-    QList<QPointF> points;
-    //QList<CAD Object> objects;
-};
+//struct CommandResult
+//{
+//    QList<qreal> figures;
+//    QList<QPointF> points;
+//    //QList<CAD Object> objects;
+//};
 
 class UserCommand;
 
@@ -23,6 +23,7 @@ public:
     {
         Idle,
         Busy,
+        Finished,
         STATE_CNT,
     };
 
@@ -30,18 +31,18 @@ public:
 
     State state(){return m_state;}
     int   steps(){return m_steps;}
-    CommandResult result(){return m_result;}
+    //CommandResult result(){return m_result;}
 
     virtual void proceed(const QMouseEvent* event) = 0;
     virtual void move(const QMouseEvent* event){m_cursor_pos = event->localPos();}
     virtual void paint(const QPaintEvent* event, QPainter& painter, PaintEngine*) = 0;
-    virtual void end(){m_state = Idle;}
+    virtual void end(){m_state = Finished;}
     virtual QString hint() = 0;
 
 protected:
     QPointF m_cursor_pos;
     State m_state;
-    CommandResult m_result;
+    //CommandResult m_result;
     int m_steps;
 
     QPointF cursor_pos(){return m_cursor_pos;}
@@ -79,6 +80,18 @@ private:
     QPointF m_center;
 };
 
+class PlaceRect : public UserCommand
+{
+public:
+    explicit PlaceRect(QObject *parent = 0);
+
+    virtual void proceed(const QMouseEvent* event);
+    virtual void paint(const QPaintEvent* event, QPainter& painter, PaintEngine* engine);
+    virtual QString hint();
+
+private:
+    QPointF m_first_point;
+};
 
 }
 
