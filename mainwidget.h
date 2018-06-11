@@ -34,6 +34,10 @@ private:
     bool         m_use_opengl;
 
     UserCommand* m_command;
+    QAction*     m_command_action;
+
+    void         raise_new_command(QAction* action);
+    void         quit_current_command(QAction* action);
 
 signals:
     void displayHint(QString);
@@ -41,6 +45,7 @@ signals:
 
 public slots:
     void setEngineType(EngineType type);
+    void startNewCommand(QAction* action);
 };
 
 #endif // MAINWIDGET_H

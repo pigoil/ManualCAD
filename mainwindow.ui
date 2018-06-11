@@ -39,10 +39,10 @@
     <property name="title">
      <string>放置</string>
     </property>
-    <addaction name="actiona_2"/>
-    <addaction name="actionb_2"/>
-    <addaction name="actionc"/>
-    <addaction name="actions"/>
+    <addaction name="actionPlaceLine"/>
+    <addaction name="actionPlaceRect"/>
+    <addaction name="actionPlaceCircle"/>
+    <addaction name="actionPlaceText"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -55,8 +55,8 @@
     <property name="title">
      <string>工具</string>
     </property>
-    <addaction name="actions_2"/>
-    <addaction name="actiond"/>
+    <addaction name="actionSelect"/>
+    <addaction name="actionDelete"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_3"/>
@@ -70,13 +70,13 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="actiona_2"/>
-   <addaction name="actionb_2"/>
-   <addaction name="actionc"/>
-   <addaction name="actions"/>
+   <addaction name="actionPlaceLine"/>
+   <addaction name="actionPlaceRect"/>
+   <addaction name="actionPlaceCircle"/>
+   <addaction name="actionPlaceText"/>
    <addaction name="separator"/>
-   <addaction name="actions_2"/>
-   <addaction name="actiond"/>
+   <addaction name="actionSelect"/>
+   <addaction name="actionDelete"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionUseStupid">
@@ -116,7 +116,10 @@
     <string>关于Qt</string>
    </property>
   </action>
-  <action name="actiona_2">
+  <action name="actionPlaceLine">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/Resource/line.png</normaloff>:/icons/Resource/line.png</iconset>
@@ -125,7 +128,10 @@
     <string>直线</string>
    </property>
   </action>
-  <action name="actionb_2">
+  <action name="actionPlaceRect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/Resource/rectangle.png</normaloff>:/icons/Resource/rectangle.png</iconset>
@@ -134,7 +140,10 @@
     <string>矩形</string>
    </property>
   </action>
-  <action name="actionc">
+  <action name="actionPlaceCircle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/Resource/circle.png</normaloff>:/icons/Resource/circle.png</iconset>
@@ -143,7 +152,10 @@
     <string>圆形</string>
    </property>
   </action>
-  <action name="actions">
+  <action name="actionPlaceText">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/Resource/text.png</normaloff>:/icons/Resource/text.png</iconset>
@@ -152,7 +164,7 @@
     <string>文字</string>
    </property>
   </action>
-  <action name="actions_2">
+  <action name="actionSelect">
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/Resource/select.png</normaloff>:/icons/Resource/select.png</iconset>
@@ -161,7 +173,7 @@
     <string>选择</string>
    </property>
   </action>
-  <action name="actiond">
+  <action name="actionDelete">
    <property name="icon">
     <iconset resource="resource.qrc">
      <normaloff>:/icons/Resource/delete.png</normaloff>:/icons/Resource/delete.png</iconset>

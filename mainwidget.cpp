@@ -1,6 +1,7 @@
 #include <QPaintEvent>
 #include <QApplication>
 #include <QDebug>
+#include <QAction>
 
 #include "mainwidget.h"
 #include "mcad_utils.h"
@@ -20,7 +21,7 @@ MCadWidget::MCadWidget(QWidget *parent) :
     setEngineType(Stupid);
     setMouseTracking(true);
 
-    m_command = new MCadCommand::PlaceCircle(this);
+    m_command = NULL;
 }
 
 void MCadWidget::paintEvent(QPaintEvent *e)
@@ -35,13 +36,19 @@ void MCadWidget::paintEvent(QPaintEvent *e)
 
     p.fillRect(e->rect(),Qt::black);
     p.setPen(Qt::green);
-    m_command->paint(e,p,m_current_engine);
+
+    if(m_command)
+        m_command->paint(e,p,m_current_engine);
+
     emit displaySPF(watch.tell());
 }
 
 void MCadWidget::mouseMoveEvent(QMouseEvent *e)
 {
-    m_command->move(e);
+    if(m_command)
+    {
+        m_command->move(e);
+    }
     update();
 }
 
@@ -49,10 +56,22 @@ void MCadWidget::mousePressEvent(QMouseEvent *e)
 {
     if(e->button() == Qt::LeftButton)
     {
-        m_command->proceed(e);
-        emit displayHint(m_command->hint());
-        update();
+        if(m_command && m_command->state() != UserCommand::Finished)
+        {
+            m_command->proceed(e);
+            if(m_command->state() == UserCommand::Finished)
+            {
+                raise_new_command(m_command_action);
+            }
+            emit displayHint(m_command->hint());
+        }
     }
+    else if(e->button() == Qt::RightButton)
+    {
+        quit_current_command(m_command_action);
+    }
+
+    update();
     QWidget::mousePressEvent(e);
 }
 
@@ -62,6 +81,62 @@ void MCadWidget::resizeEvent(QResizeEvent *e)
         m_glwidget->setGeometry(0,0,e->size().width()-1,e->size().height()-1);
 
     QWidget::resizeEvent(e);
+}
+
+void MCadWidget::raise_new_command(QAction *action)
+{
+    if(m_command && m_command->state()!=UserCommand::Finished)
+    {
+        quit_current_command(m_command_action);
+    }
+
+    QString name = action->objectName();
+    m_command_action = action;
+    if(name == "actionPlaceLine")
+    {
+        if(m_command && m_command->state() != UserCommand::Finished)
+        {
+            delete m_command;
+        }
+
+        m_command = new MCadCommand::PlaceLine(this);
+        emit displayHint(m_command->hint());
+    }
+    else if(name == "actionPlaceRect")
+    {
+        if(m_command && m_command->state() != UserCommand::Finished)
+        {
+            delete m_command;
+        }
+
+        m_command = new MCadCommand::PlaceRect(this);
+        emit displayHint(m_command->hint());
+    }
+    else if(name == "actionPlaceCircle")
+    {
+        if(m_command && m_command->state() != UserCommand::Finished)
+        {
+            delete m_command;
+        }
+
+        m_command = new MCadCommand::PlaceCircle(this);
+        emit displayHint(m_command->hint());
+    }
+    else if(name == "actionPlaceText")
+    {
+
+    }
+}
+
+void MCadWidget::quit_current_command(QAction *action)
+{
+    if(action)
+        action->setChecked(false);
+    if(m_command)
+        delete m_command;
+
+    emit displayHint("        ");
+    m_command = NULL;
 }
 
 void MCadWidget::setEngineType(MCadWidget::EngineType type)
@@ -89,4 +164,9 @@ void MCadWidget::setEngineType(MCadWidget::EngineType type)
     }
 
     m_current_engine = m_paint_engines[type];
+}
+
+void MCadWidget::startNewCommand(QAction *action)
+{
+    raise_new_command(action);
 }

@@ -23,12 +23,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
     labelHint->setStyleSheet("color:red");
 
-    QActionGroup* g = new QActionGroup(this);
-    g->addAction(ui->actionUseStupid);
-    g->addAction(ui->actionUseQtGui);
-    g->addAction(ui->actionUseOpenGL);
+    QActionGroup* groupEngine = new QActionGroup(this);
+    groupEngine->addAction(ui->actionUseStupid);
+    groupEngine->addAction(ui->actionUseQtGui);
+    groupEngine->addAction(ui->actionUseOpenGL);
+    groupEngine->setExclusive(true);
 
-    g->setExclusive(true);
+    QActionGroup* groupPlace = new QActionGroup(this);
+    groupPlace->addAction(ui->actionPlaceLine);
+    groupPlace->addAction(ui->actionPlaceCircle);
+    groupPlace->addAction(ui->actionPlaceRect);
+    groupPlace->addAction(ui->actionPlaceText);
+    groupPlace->setExclusive(true);
+    connect(groupPlace,SIGNAL(triggered(QAction*)),mcad_widget,SLOT(startNewCommand(QAction*)));
 }
 
 MainWindow::~MainWindow()
