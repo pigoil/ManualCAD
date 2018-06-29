@@ -45,7 +45,6 @@
     <addaction name="actionCone"/>
     <addaction name="actionPodetium"/>
     <addaction name="actionKoch"/>
-    <addaction name="actionAnimation"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -59,6 +58,7 @@
      <string>工具</string>
     </property>
     <addaction name="actionDelete"/>
+    <addaction name="actionAnimation"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_3"/>

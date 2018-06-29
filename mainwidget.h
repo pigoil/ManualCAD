@@ -34,7 +34,7 @@ private:
     PaintEngine* m_current_engine;
     bool         m_use_opengl;
 
-    MCadUtil::GeometryTable m_buff;
+    GeometryTable m_buff;
 
     UserCommand* m_command;
     QAction*     m_command_action;

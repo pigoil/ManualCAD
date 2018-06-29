@@ -10,9 +10,9 @@
 #define CURSOR_COLOR    Qt::darkMagenta
 #define POINT_COLOR     Qt::red
 
-MCadUtil::GeometryTable* UserCommand::geo_tab = NULL;
+GeometryTable* UserCommand::geo_tab = NULL;
 
-void UserCommand::envInit(MCadUtil::GeometryTable *t)
+void UserCommand::envInit(GeometryTable *t)
 {
     geo_tab = t;
 }
@@ -88,9 +88,9 @@ void MCadCommand::PlaceLine::redo()
     QVector3D p1(m_p1.x(), m_p1.y(), 0);
     QVector3D p2(m_p2.x(), m_p2.y(), 0);
 
-    MCadUtil::Entity entity;
+    Entity entity;
 
-    MCadUtil::Line3d line(p1,p2);
+    Line3d line(p1,p2);
 
     entity.append(line);
     entity.select(false);
@@ -163,11 +163,11 @@ void MCadCommand::PlaceCircle::redo()
 
     qreal radius = MCadUtil::distance(m_center,m_p2);
 
-    MCadUtil::Entity entity;
+    Entity entity;
 
     QPointF point;
     //QVector3D p1,p2;
-    //MCadUtil::Line3d line;
+    //Line3d line;
     qreal step = 360.0/m_piece;
     for(int i=0; i<m_piece; ++i)
     {
@@ -175,7 +175,7 @@ void MCadCommand::PlaceCircle::redo()
         QVector3D p1 = QVector3D(point);
         point = calc_point(m_center,radius,step*(i+1)/180*3.141592654);
         QVector3D p2 = QVector3D(point);
-        MCadUtil::Line3d line(p1,p2);
+        Line3d line(p1,p2);
         entity.append(line);
     }
 
@@ -261,12 +261,12 @@ void MCadCommand::PlaceRect::redo()
     QVector3D p3(m_p1.x(), m_p2.y(), 0);
     QVector3D p4(m_p2.x(), m_p1.y(), 0);
 
-    MCadUtil::Entity entity;
+    Entity entity;
 
-    MCadUtil::Line3d l1(p1,p4);
-    MCadUtil::Line3d l2(p4,p2);
-    MCadUtil::Line3d l3(p2,p3);
-    MCadUtil::Line3d l4(p3,p1);
+    Line3d l1(p1,p4);
+    Line3d l2(p4,p2);
+    Line3d l3(p2,p3);
+    Line3d l4(p3,p1);
 
     entity.append(l1);
     entity.append(l2);
@@ -285,7 +285,7 @@ MCadCommand::Delete::Delete(QObject *parent):
 
 void MCadCommand::Delete::redo()
 {
-    for(MCadUtil::GeometryTable::iterator i = geo_tab->begin(); i!=geo_tab->end();)
+    for(GeometryTable::iterator i = geo_tab->begin(); i!=geo_tab->end();)
     {
         if((*i).isSelected())
         {
@@ -306,13 +306,13 @@ MCadCommand::Koch::Koch(QObject *parent):
 
 void MCadCommand::Koch::redo()
 {
-    MCadUtil::Entity entity;
+    Entity entity;
     koch(0,0,600,600,8,entity);
     entity.select(false);
     geo_tab->append(entity);
 }
 
-void MCadCommand::Koch::koch(int x1, int y1, int x2, int y2, int n, MCadUtil::Entity &e)
+void MCadCommand::Koch::koch(int x1, int y1, int x2, int y2, int n, Entity &e)
 {
     if (n > 0)
     {
@@ -342,7 +342,7 @@ void MCadCommand::Koch::koch(int x1, int y1, int x2, int y2, int n, MCadUtil::En
     {
         QVector3D p1(x1,y1,0);
         QVector3D p2(x2,y2,0);
-        MCadUtil::Line3d line(p1,p2);
+        Line3d line(p1,p2);
         e.append(line);
     }
 }
@@ -396,9 +396,9 @@ void MCadCommand::Podetium::redo()
     create_podetium(m_src,m_deepth);
 }
 
-bool MCadCommand::Podetium::get_selection(MCadUtil::Entity &selected)
+bool MCadCommand::Podetium::get_selection(Entity &selected)
 {
-    foreach (MCadUtil::Entity entity, *geo_tab)
+    foreach (Entity entity, *geo_tab)
     {
         if(entity.isSelected())
         {
@@ -410,23 +410,23 @@ bool MCadCommand::Podetium::get_selection(MCadUtil::Entity &selected)
     return false;
 }
 
-void MCadCommand::Podetium::create_podetium(MCadUtil::Entity poly, float z)
+void MCadCommand::Podetium::create_podetium(Entity poly, float z)
 {
-    MCadUtil::Entity oppsite = poly;
-    MCadUtil::Entity entity;
+    Entity oppsite = poly;
+    Entity entity;
 
     entity.append(poly);
 
-    for(MCadUtil::Entity::iterator it = oppsite.begin() ; it!=oppsite.end() ; ++it)
+    for(Entity::iterator it = oppsite.begin() ; it!=oppsite.end() ; ++it)
     {
-        MCadUtil::Line3d& line= *it;
+        Line3d& line= *it;
         QVector3D p1 = line.p1();
 
         line.p1().setZ(z);
         line.p2().setZ(z);
 
         QVector3D p2 = line.p1();
-        MCadUtil::Line3d edge(p1,p2);
+        Line3d edge(p1,p2);
         entity.append(edge);
     }
     entity.append(oppsite);
@@ -482,9 +482,9 @@ void MCadCommand::Cone::redo()
     create_cone(m_src,m_deepth);
 }
 
-bool MCadCommand::Cone::get_selection(MCadUtil::Entity &selected)
+bool MCadCommand::Cone::get_selection(Entity &selected)
 {
-    foreach (MCadUtil::Entity entity, *geo_tab)
+    foreach (Entity entity, *geo_tab)
     {
         if(entity.isSelected())
         {
@@ -496,13 +496,13 @@ bool MCadCommand::Cone::get_selection(MCadUtil::Entity &selected)
     return false;
 }
 
-QVector3D MCadCommand::Cone::get_center(MCadUtil::Entity &poly)
+QVector3D MCadCommand::Cone::get_center(Entity &poly)
 {
     int edges = poly.count();
 
     QVector3D res(0,0,0);
 
-    for(MCadUtil::Entity::iterator it=poly.begin() ; it!=poly.end() ; ++it)
+    for(Entity::iterator it=poly.begin() ; it!=poly.end() ; ++it)
     {
         res += it->p1();
     }
@@ -510,19 +510,19 @@ QVector3D MCadCommand::Cone::get_center(MCadUtil::Entity &poly)
     return res/edges;
 }
 
-void MCadCommand::Cone::create_cone(MCadUtil::Entity poly, float z)
+void MCadCommand::Cone::create_cone(Entity poly, float z)
 {
-    MCadUtil::Entity entity;
+    Entity entity;
     QVector3D center = get_center(poly);
     center.setZ(z);
 
     entity.append(poly);
 
-    for(MCadUtil::Entity::iterator it = poly.begin() ; it!=poly.end() ; ++it)
+    for(Entity::iterator it = poly.begin() ; it!=poly.end() ; ++it)
     {
         QVector3D p1 = it->p1();
 
-        MCadUtil::Line3d edge(p1,center);
+        Line3d edge(p1,center);
         entity.append(edge);
     }
 

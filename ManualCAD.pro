@@ -31,14 +31,16 @@ SOURCES += main.cpp \
     Core/paintengine.cpp \
     Utils/mcad_utils.cpp \
     Core/usercommand.cpp \
-    parameterdialog.cpp
+    parameterdialog.cpp \
+    Core/geometry.cpp
 
 HEADERS  += mainwindow.h \
     mainwidget.h \
     Core/paintengine.h \
     Utils/mcad_utils.h \
     Core/usercommand.h \
-    parameterdialog.h
+    parameterdialog.h \
+    Core/geometry.h
 
 FORMS    += mainwindow.ui \
     parameterdialog.ui

@@ -2,8 +2,8 @@
 #include <QApplication>
 #include <QDebug>
 #include <QAction>
-#include <QRubberBand>
 #include <QTimer>
+#include <QMatrix4x4>
 
 #include "mainwidget.h"
 #include "mcad_utils.h"
@@ -18,7 +18,7 @@ MCadWidget::MCadWidget(QWidget *parent) :
     m_offset(0,0),
     m_selected(0)
 {
-    UserCommand::envInit(new MCadUtil::GeometryTable); //建立真实图形表，初始化用户命令环境
+    UserCommand::envInit(new GeometryTable); //建立真实图形表，初始化用户命令环境
 
     QPixmap cursor = QPixmap(":/icons/Resource/cross.png");
     cursor.setDevicePixelRatio(5); //指针的图案太大，设置缩小五倍
@@ -60,8 +60,8 @@ void MCadWidget::paintEvent(QPaintEvent *e)
         p.translate(-m_scale_center);
         p.translate(m_offset);
     }
-    MCadUtil::GeometryTable& buff = m_use_opengl ? *UserCommand::geoTab() : m_buff;
-    foreach(MCadUtil::Entity entity,buff)
+    GeometryTable& buff = m_use_opengl ? *UserCommand::geoTab() : m_buff;
+    foreach(Entity entity,buff)
     {
         if(entity.isSelected())//如果选中，画蓝色
         {
@@ -71,7 +71,7 @@ void MCadWidget::paintEvent(QPaintEvent *e)
         {
             p.setPen(Qt::green);
         }
-        foreach (MCadUtil::Line3d line, entity)//绘制已有图线
+        foreach (Line3d line, entity)//绘制已有图线
         {
             m_current_engine->drawLine(line.toLineF(),p);
         }
@@ -328,8 +328,8 @@ void MCadWidget::toggle_selection(QPoint p, bool mutily)
 {
     for(int i=0; i<m_buff.count(); ++i)
     {
-        MCadUtil::Entity& view = m_buff[i];
-        MCadUtil::Entity& entity = (*UserCommand::geoTab())[i];
+        Entity& view = m_buff[i];
+        Entity& entity = (*UserCommand::geoTab())[i];
         for(int j=0; j<entity.count(); ++j)
         {
             if(view[j].intersectWith(p))//如果和某个线段又交点
@@ -352,10 +352,10 @@ void MCadWidget::refresh_buff()
     m_buff = *UserCommand::geoTab();
     for(int i=0;i<m_buff.count();++i)
     {
-        MCadUtil::Entity& entity = m_buff[i];
+        Entity& entity = m_buff[i];
         for(int j=0;j<entity.count();++j)
         {
-            MCadUtil::Line3d& line = entity[j];
+            Line3d& line = entity[j];
             QMatrix4x4 T;
             T.translate(QVector3D(-m_scale_center));
             line = line*T;
@@ -418,12 +418,12 @@ void MCadWidget::startNewCommand(QAction *action)
 
 void MCadWidget::rotating_animation()
 {
-    for(MCadUtil::GeometryTable::iterator it = UserCommand::geoTab()->begin() ; it!=UserCommand::geoTab()->end() ; ++it)
+    for(GeometryTable::iterator it = UserCommand::geoTab()->begin() ; it!=UserCommand::geoTab()->end() ; ++it)
     {
         if(it->isSelected())
         {
-            it->rotate(MCadUtil::Entity::Y_Axis,5);
-            it->rotate(MCadUtil::Entity::X_Axis,5);
+            it->rotate(Entity::Y_Axis,5);
+            it->rotate(Entity::X_Axis,5);
         }
     }
 

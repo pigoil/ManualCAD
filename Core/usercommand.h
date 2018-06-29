@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QMouseEvent>
 
-#include "mcad_utils.h"
+#include "geometry.h"
 #include "paintengine.h"
 
 class UserCommand;
@@ -28,8 +28,8 @@ public:
         REQ_CNT,
     };
 
-    static void                         envInit(MCadUtil::GeometryTable*);
-    static MCadUtil::GeometryTable*     geoTab(){return geo_tab;}
+    static void                         envInit(GeometryTable*);
+    static GeometryTable*     geoTab(){return geo_tab;}
 
     explicit UserCommand( QObject *parent = 0);
 
@@ -50,7 +50,7 @@ protected:
     State m_state;
     int m_steps;
 
-    static MCadUtil::GeometryTable* geo_tab;
+    static GeometryTable* geo_tab;
 
     QPointF cursor_pos(){return m_cursor_pos;}
 
@@ -171,7 +171,7 @@ public:
 private:
     QPointF m_p1,m_p2;
 
-    void koch(int x1, int y1, int x2, int y2, int n, MCadUtil::Entity &e);
+    void koch(int x1, int y1, int x2, int y2, int n, Entity &e);
 };
 
 class Podetium : public UserCommand
@@ -192,11 +192,11 @@ public:
     virtual void undo(){}
 
 private:
-    bool get_selection(MCadUtil::Entity& selected);
-    MCadUtil::Entity m_src;
+    bool get_selection(Entity& selected);
+    Entity m_src;
     qreal m_deepth;
 
-    void create_podetium(MCadUtil::Entity poly, float z);
+    void create_podetium(Entity poly, float z);
 };
 
 class Cone : public UserCommand
@@ -217,13 +217,13 @@ public:
     virtual void undo(){}
 
 private:
-    bool get_selection(MCadUtil::Entity& selected);
-    QVector3D get_center(MCadUtil::Entity& poly);
+    bool get_selection(Entity& selected);
+    QVector3D get_center(Entity& poly);
 
-    MCadUtil::Entity m_src;
+    Entity m_src;
     qreal m_deepth;
 
-    void create_cone(MCadUtil::Entity poly, float z);
+    void create_cone(Entity poly, float z);
 };
 
 }
