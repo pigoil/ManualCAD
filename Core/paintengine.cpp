@@ -163,11 +163,16 @@ void StupidPaintEngine::drawPoint(qreal x, qreal y, QPainter &painter)
 void StupidPaintEngine::drawLine(qreal x1, qreal y1, qreal x2, qreal y2, QPainter &painter)
 {
     //Bresenham 直线生成算法
-    qreal dx = x2 - x1;
-    qreal dy = y2 - y1;
-    qreal ux = ((dx > 0) << 1) - 1;//x的增量方向，取或-1
-    qreal uy = ((dy > 0) << 1) - 1;//y的增量方向，取或-1
-    qreal x = x1, y = y1;
+    x1 = (int)x1;
+    y1 = (int)y1;
+    x2 = (int)x2;
+    y2 = (int)y2;
+
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    int ux = ((dx > 0) << 1) - 1;//x的增量方向，取或-1
+    int uy = ((dy > 0) << 1) - 1;//y的增量方向，取或-1
+    int x = x1, y = y1;
     int eps=0;//eps为累加误差
 
     dx = qAbs(dx);

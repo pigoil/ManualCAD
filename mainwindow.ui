@@ -42,7 +42,10 @@
     <addaction name="actionPlaceLine"/>
     <addaction name="actionPlaceRect"/>
     <addaction name="actionPlaceCircle"/>
-    <addaction name="actionPlaceText"/>
+    <addaction name="actionCone"/>
+    <addaction name="actionPodetium"/>
+    <addaction name="actionKoch"/>
+    <addaction name="actionAnimation"/>
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
@@ -55,7 +58,6 @@
     <property name="title">
      <string>工具</string>
     </property>
-    <addaction name="actionSelect"/>
     <addaction name="actionDelete"/>
    </widget>
    <addaction name="menu"/>
@@ -73,9 +75,11 @@
    <addaction name="actionPlaceLine"/>
    <addaction name="actionPlaceRect"/>
    <addaction name="actionPlaceCircle"/>
-   <addaction name="actionPlaceText"/>
+   <addaction name="actionPodetium"/>
+   <addaction name="actionCone"/>
+   <addaction name="actionKoch"/>
+   <addaction name="actionAnimation"/>
    <addaction name="separator"/>
-   <addaction name="actionSelect"/>
    <addaction name="actionDelete"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -152,27 +156,6 @@
     <string>圆形</string>
    </property>
   </action>
-  <action name="actionPlaceText">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/icons/Resource/text.png</normaloff>:/icons/Resource/text.png</iconset>
-   </property>
-   <property name="text">
-    <string>文字</string>
-   </property>
-  </action>
-  <action name="actionSelect">
-   <property name="icon">
-    <iconset resource="resource.qrc">
-     <normaloff>:/icons/Resource/select.png</normaloff>:/icons/Resource/select.png</iconset>
-   </property>
-   <property name="text">
-    <string>选择</string>
-   </property>
-  </action>
   <action name="actionDelete">
    <property name="icon">
     <iconset resource="resource.qrc">
@@ -180,6 +163,48 @@
    </property>
    <property name="text">
     <string>删除</string>
+   </property>
+  </action>
+  <action name="actionKoch">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/snow.png</normaloff>:/icons/Resource/snow.png</iconset>
+   </property>
+   <property name="text">
+    <string>Koch分型</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::WindowShortcut</enum>
+   </property>
+  </action>
+  <action name="actionCone">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/cone.png</normaloff>:/icons/Resource/cone.png</iconset>
+   </property>
+   <property name="text">
+    <string>锥体</string>
+   </property>
+  </action>
+  <action name="actionPodetium">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/podetium.png</normaloff>:/icons/Resource/podetium.png</iconset>
+   </property>
+   <property name="text">
+    <string>柱体</string>
+   </property>
+  </action>
+  <action name="actionAnimation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/animation.png</normaloff>:/icons/Resource/animation.png</iconset>
+   </property>
+   <property name="text">
+    <string>动画</string>
    </property>
   </action>
  </widget>

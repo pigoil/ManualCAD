@@ -26,6 +26,7 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent* e);
     virtual void mousePressEvent(QMouseEvent* e);
     virtual void resizeEvent(QResizeEvent* e);
+    virtual void wheelEvent(QWheelEvent* e);
 
 private:
     QGLWidget*   m_glwidget;
@@ -33,11 +34,30 @@ private:
     PaintEngine* m_current_engine;
     bool         m_use_opengl;
 
+    MCadUtil::GeometryTable m_buff;
+
     UserCommand* m_command;
     QAction*     m_command_action;
 
+    qreal        m_scale;
+    QPoint       m_scale_center;
+    qreal        m_x_rotation;
+    qreal        m_y_rotation;
+    QPoint       m_rotate_center;
+
+    QPointF      m_offset;
+    QPoint       m_offset_center;
+
+    int          m_selected;
+
+    QTimer*      m_animation_timer;
+
     void         raise_new_command(QAction* action);
     void         quit_current_command(QAction* action);
+    void         quit_selection();
+    void         toggle_selection(QPoint p, bool mutily = true);
+    void         refresh_buff();
+    void         reset_view();
 
 signals:
     void displayHint(QString);
@@ -46,6 +66,9 @@ signals:
 public slots:
     void setEngineType(EngineType type);
     void startNewCommand(QAction* action);
+
+private slots:
+    void rotating_animation();
 };
 
 #endif // MAINWIDGET_H

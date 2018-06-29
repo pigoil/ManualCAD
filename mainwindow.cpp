@@ -33,9 +33,16 @@ MainWindow::MainWindow(QWidget *parent) :
     groupPlace->addAction(ui->actionPlaceLine);
     groupPlace->addAction(ui->actionPlaceCircle);
     groupPlace->addAction(ui->actionPlaceRect);
-    groupPlace->addAction(ui->actionPlaceText);
     groupPlace->setExclusive(true);
     connect(groupPlace,SIGNAL(triggered(QAction*)),mcad_widget,SLOT(startNewCommand(QAction*)));
+
+    QActionGroup* groupOther = new QActionGroup(this);
+    groupOther->addAction(ui->actionDelete);
+    groupOther->addAction(ui->actionKoch);
+    groupOther->addAction(ui->actionCone);
+    groupOther->addAction(ui->actionPodetium);
+    groupOther->addAction(ui->actionAnimation);
+    connect(groupOther,SIGNAL(triggered(QAction*)),mcad_widget,SLOT(startNewCommand(QAction*)));
 }
 
 MainWindow::~MainWindow()
@@ -71,9 +78,24 @@ void MainWindow::slot_spf(int n)
 
 void MainWindow::on_actionAbout_triggered()
 {
-    QString s("MaunalCAD \
-              dsadsadas");
-    QMessageBox::about(this,"关于",s);
+    QString title("关于MaunalCAD");
+    QString text("<h1>Manual CAD</h1>"
+                 "<h2>简介</h2>"
+                 "<p>基于Qt 5.8开发的CAD软件，特性：</p>"
+                 "<ul>"
+                 "<li>绘制二维线、矩形、圆、科赫曲线</li>"
+                 "<li>从二维矩形、圆生成锥体、柱体</li>"
+                 "<li>删除选中的图形</li>"
+                 "<li>非编辑状态下缩放、三维旋转、平移</li>"
+                 "<li>非编辑状态下选中</li>"
+                 "<li>可开关的消隐效果</li>"
+                 "<li>可开关的旋转动画</li>"
+                 "<li>三种可选绘图引擎</li>"
+                 "</ul>"
+                 "<h2>组员</h2>"
+                 "<p>李康清、张逸鸿、何梓秋</p>"
+                );
+    QMessageBox::about(this,title,text);
 
 }
 

@@ -9,5 +9,9 @@
         <file>Resource/logo.png</file>
         <file>Resource/M.png</file>
         <file>Resource/cross.png</file>
+        <file>Resource/snow.png</file>
+        <file>Resource/podetium.png</file>
+        <file>Resource/cone.png</file>
+        <file>Resource/animation.png</file>
     </qresource>
 </RCC>

@@ -30,15 +30,18 @@ SOURCES += main.cpp \
     mainwidget.cpp \
     Core/paintengine.cpp \
     Utils/mcad_utils.cpp \
-    Core/usercommand.cpp
+    Core/usercommand.cpp \
+    parameterdialog.cpp
 
 HEADERS  += mainwindow.h \
     mainwidget.h \
     Core/paintengine.h \
     Utils/mcad_utils.h \
-    Core/usercommand.h
+    Core/usercommand.h \
+    parameterdialog.h
 
 FORMS    += mainwindow.ui \
+    parameterdialog.ui
 
 RESOURCES += \
     resource.qrc
