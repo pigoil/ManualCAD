@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLabel>
+
+#include "mainwidget.h"
 
 namespace Ui {
 class MainWindow;
@@ -15,8 +18,21 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+private slots:
+    void on_actionUseStupid_triggered();
+    void on_actionUseQtGui_triggered();
+    void on_actionUseOpenGL_triggered();
+    void on_actionAbout_triggered();
+    void on_actionAboutQt_triggered();
+
+    void slot_hint(QString s);
+    void slot_spf(int n);
+
 private:
     Ui::MainWindow *ui;
+    MCadWidget* mcad_widget;
+    QLabel* labelHint;
+    QLabel* labelSPF;
 };
 
 #endif // MAINWINDOW_H

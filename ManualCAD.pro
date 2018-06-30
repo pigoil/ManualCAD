@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -22,10 +22,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += Core \
+               Utils \
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp \
+           mainwindow.cpp \
+    mainwidget.cpp \
+    Core/paintengine.cpp \
+    Utils/mcad_utils.cpp \
+    Core/usercommand.cpp \
+    parameterdialog.cpp \
+    Core/geometry.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    mainwidget.h \
+    Core/paintengine.h \
+    Utils/mcad_utils.h \
+    Core/usercommand.h \
+    parameterdialog.h \
+    Core/geometry.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    parameterdialog.ui
+
+RESOURCES += \
+    resource.qrc

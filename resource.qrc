@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>Resource/circle.png</file>
+        <file>Resource/delete.png</file>
+        <file>Resource/line.png</file>
+        <file>Resource/rectangle.png</file>
+        <file>Resource/select.png</file>
+        <file>Resource/text.png</file>
+        <file>Resource/logo.png</file>
+        <file>Resource/M.png</file>
+        <file>Resource/cross.png</file>
+        <file>Resource/snow.png</file>
+        <file>Resource/podetium.png</file>
+        <file>Resource/cone.png</file>
+        <file>Resource/animation.png</file>
+    </qresource>
+</RCC>

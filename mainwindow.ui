@@ -1,24 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>853</width>
+    <height>612</height>
    </rect>
   </property>
-  <property name="windowTitle" >
-   <string>MainWindow</string>
+  <property name="windowTitle">
+   <string>ManualCAD</string>
   </property>
-  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  <property name="windowIcon">
+   <iconset resource="resource.qrc">
+    <normaloff>:/icons/Resource/M.png</normaloff>:/icons/Resource/M.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>853</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu1">
+    <property name="title">
+     <string>绘图引擎</string>
+    </property>
+    <addaction name="actionUseStupid"/>
+    <addaction name="actionUseQtGui"/>
+    <addaction name="actionUseOpenGL"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>放置</string>
+    </property>
+    <addaction name="actionPlaceLine"/>
+    <addaction name="actionPlaceRect"/>
+    <addaction name="actionPlaceCircle"/>
+    <addaction name="actionCone"/>
+    <addaction name="actionPodetium"/>
+    <addaction name="actionKoch"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="actionAbout"/>
+    <addaction name="actionAboutQt"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>工具</string>
+    </property>
+    <addaction name="actionDelete"/>
+    <addaction name="actionAnimation"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_3"/>
+   <addaction name="menu1"/>
+   <addaction name="menu_2"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionPlaceLine"/>
+   <addaction name="actionPlaceRect"/>
+   <addaction name="actionPlaceCircle"/>
+   <addaction name="actionPodetium"/>
+   <addaction name="actionCone"/>
+   <addaction name="actionKoch"/>
+   <addaction name="actionAnimation"/>
+   <addaction name="separator"/>
+   <addaction name="actionDelete"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionUseStupid">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Stupid模式</string>
+   </property>
+  </action>
+  <action name="actionUseQtGui">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Qt内嵌模式</string>
+   </property>
+  </action>
+  <action name="actionUseOpenGL">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>OpenGL模式</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>关于Qt</string>
+   </property>
+  </action>
+  <action name="actionPlaceLine">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/line.png</normaloff>:/icons/Resource/line.png</iconset>
+   </property>
+   <property name="text">
+    <string>直线</string>
+   </property>
+  </action>
+  <action name="actionPlaceRect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/rectangle.png</normaloff>:/icons/Resource/rectangle.png</iconset>
+   </property>
+   <property name="text">
+    <string>矩形</string>
+   </property>
+  </action>
+  <action name="actionPlaceCircle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/circle.png</normaloff>:/icons/Resource/circle.png</iconset>
+   </property>
+   <property name="text">
+    <string>圆形</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/delete.png</normaloff>:/icons/Resource/delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>删除</string>
+   </property>
+  </action>
+  <action name="actionKoch">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/snow.png</normaloff>:/icons/Resource/snow.png</iconset>
+   </property>
+   <property name="text">
+    <string>Koch分型</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::WindowShortcut</enum>
+   </property>
+  </action>
+  <action name="actionCone">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/cone.png</normaloff>:/icons/Resource/cone.png</iconset>
+   </property>
+   <property name="text">
+    <string>锥体</string>
+   </property>
+  </action>
+  <action name="actionPodetium">
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/podetium.png</normaloff>:/icons/Resource/podetium.png</iconset>
+   </property>
+   <property name="text">
+    <string>柱体</string>
+   </property>
+  </action>
+  <action name="actionAnimation">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resource.qrc">
+     <normaloff>:/icons/Resource/animation.png</normaloff>:/icons/Resource/animation.png</iconset>
+   </property>
+   <property name="text">
+    <string>动画</string>
+   </property>
+  </action>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
- <resources/>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
