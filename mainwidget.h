@@ -44,6 +44,8 @@ private:
     qreal        m_x_rotation;
     qreal        m_y_rotation;
     QPoint       m_rotate_center;
+    QVector3D    m_view_vector;
+    bool         m_use_blanking;
 
     QPointF      m_offset;
     QPoint       m_offset_center;
@@ -55,7 +57,7 @@ private:
     void         raise_new_command(QAction* action);
     void         quit_current_command(QAction* action);
     void         quit_selection();
-    void         toggle_selection(QPoint p, bool mutily = true);
+    void         toggle_selection(QPoint p, bool mulity = true);
     void         refresh_buff();
     void         reset_view();
 
@@ -69,6 +71,7 @@ public slots:
 
 private slots:
     void rotating_animation();
+    void setUseBlanking(bool b);
 };
 
 #endif // MAINWIDGET_H

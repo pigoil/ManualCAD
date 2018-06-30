@@ -15,6 +15,8 @@ MCadWidget::MCadWidget(QWidget *parent) :
     m_scale(1.0),
     m_x_rotation(0),
     m_y_rotation(0),
+    m_view_vector(0,0,-1),
+    m_use_blanking(false),
     m_offset(0,0),
     m_selected(0)
 {
@@ -71,10 +73,7 @@ void MCadWidget::paintEvent(QPaintEvent *e)
         {
             p.setPen(Qt::green);
         }
-        foreach (Line3d line, entity)//绘制已有图线
-        {
-            m_current_engine->drawLine(line.toLineF(),p);
-        }
+        entity.project(m_current_engine,p,m_view_vector,m_use_blanking);
     }
 
     emit displaySPF(watch.tell());//计算绘制单帧时间
@@ -233,10 +232,6 @@ void MCadWidget::raise_new_command(QAction *action)
         m_command = new MCadCommand::PlaceCircle(this);
         emit displayHint(m_command->hint());
     }
-    else if(name == "actionPlaceText")
-    {
-
-    }
     else if(name == "actionDelete")
     {
         if(m_command && m_command->state() != UserCommand::Finished)
@@ -265,6 +260,7 @@ void MCadWidget::raise_new_command(QAction *action)
         }
 
         m_command = new MCadCommand::Podetium(this);
+        emit displayHint(m_command->hint());
     }
     else if(name == "actionCone")
     {
@@ -274,6 +270,7 @@ void MCadWidget::raise_new_command(QAction *action)
         }
 
         m_command = new MCadCommand::Cone(this);
+        emit displayHint(m_command->hint());
     }
     else if(name == "actionAnimation")
     {
@@ -289,12 +286,7 @@ void MCadWidget::raise_new_command(QAction *action)
             action->setChecked(false);
             m_animation_timer->stop();
         }
-//        if(m_command && m_command->state() != UserCommand::Finished)
-//        {
-//            delete m_command;
-//        }
-
-//        m_command = new MCadCommand::Cone(this);
+        emit displayHint("选择实体开始动画");
     }
 
     refresh_buff();
@@ -324,25 +316,35 @@ void MCadWidget::quit_selection()
     m_selected = 0;
 }
 
-void MCadWidget::toggle_selection(QPoint p, bool mutily)
+void MCadWidget::toggle_selection(QPoint p, bool mulity)
 {
-    for(int i=0; i<m_buff.count(); ++i)
+    if(UserCommand::geoTab()->isEmpty())return;
+
+    GeometryTable::iterator itG = UserCommand::geoTab()->begin();
+    Entity::iterator eG = itG->begin();
+    Plane::iterator plG = eG->begin();
+
+    for(GeometryTable::iterator it = m_buff.begin() ; it!=m_buff.end() ; ++it)
     {
-        Entity& view = m_buff[i];
-        Entity& entity = (*UserCommand::geoTab())[i];
-        for(int j=0; j<entity.count(); ++j)
+        for(Entity::iterator e = it->begin() ; e!=it->end() ; ++e)
         {
-            if(view[j].intersectWith(p))//如果和某个线段又交点
+            for(Plane::iterator pl=e->begin() ; pl!=e->end() ; ++pl)
             {
-                ++m_selected;
-                view.select(true);
-                entity.select(true);//选中
-                if(mutily)
-                    break;
-                else
-                    return;
+                if(pl->intersectWith(p))
+                {
+                    ++m_selected;
+                    it->select(true);
+                    itG->select(true);
+                    if(mulity)
+                        break;
+                    else
+                        return;
+                }
+                ++plG;
             }
+            ++eG;
         }
+        ++itG;
     }
 }
 
@@ -350,24 +352,27 @@ void MCadWidget::toggle_selection(QPoint p, bool mutily)
 void MCadWidget::refresh_buff()
 {
     m_buff = *UserCommand::geoTab();
-    for(int i=0;i<m_buff.count();++i)
+
+    for(GeometryTable::iterator it=m_buff.begin() ; it!=m_buff.end() ; ++it)
     {
-        Entity& entity = m_buff[i];
-        for(int j=0;j<entity.count();++j)
+        for(Entity::iterator e = it->begin() ; e!=it->end() ; ++e)
         {
-            Line3d& line = entity[j];
-            QMatrix4x4 T;
-            T.translate(QVector3D(-m_scale_center));
-            line = line*T;
-            T = QMatrix4x4();
-            T.scale(m_scale);
-            line = line*T;
-            T = QMatrix4x4();
-            T.translate(QVector3D(m_scale_center));
-            T.translate(QVector3D(m_offset));
-            T.rotate(m_x_rotation,QVector3D(0,1,0));
-            T.rotate(m_y_rotation,QVector3D(1,0,0));
-            line = line*T;
+            for(Plane::iterator p = e->begin() ; p!=e->end() ; ++p)
+            {
+                Line3d& line = *p;
+                QMatrix4x4 T;
+                T.translate(QVector3D(-m_scale_center));
+                line = line*T;
+                T = QMatrix4x4();
+                T.scale(m_scale);
+                line = line*T;
+                T = QMatrix4x4();
+                T.translate(QVector3D(m_scale_center));
+                T.translate(QVector3D(m_offset));
+                T.rotate(m_x_rotation,QVector3D(0,1,0));
+                T.rotate(m_y_rotation,QVector3D(1,0,0));
+                line = line*T;
+            }
         }
     }
 }
@@ -429,4 +434,9 @@ void MCadWidget::rotating_animation()
 
     refresh_buff();
     update();
+}
+
+void MCadWidget::setUseBlanking(bool b)
+{
+    m_use_blanking = b;
 }

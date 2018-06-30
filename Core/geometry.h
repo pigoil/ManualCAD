@@ -3,6 +3,8 @@
 
 #include <QVector3D>
 
+#include "paintengine.h"
+
 class Line3d
 {
 public:
@@ -11,6 +13,7 @@ public:
     QVector3D&  p1();
     QVector3D&  p2();
     QLineF      toLineF();
+    QVector3D   toVector() const;
     Line3d      operator* (const QMatrix4x4& mat);
     bool        intersectWith(const QPointF &p, qreal tolerance = 10);
 
@@ -21,7 +24,16 @@ private:
 
 };
 
-class Entity : public QList<Line3d>
+class Plane : public QList<Line3d>
+{
+public:
+    bool maybePlane() const;
+    QVector3D normal() const;
+    bool visible(QVector3D view) const;
+    void flip();
+};
+
+class Entity : public QList<Plane>
 {
 public:
     enum Axis
@@ -32,11 +44,16 @@ public:
     };
     void select(bool);
     bool isSelected() const;
+    void singlePlane(bool);
+    bool isSinglePlane();
+    void project(PaintEngine *engine , QPainter &painter, QVector3D view , bool blanking);
 
     void rotate(Axis,float angle);
 
 private:
     bool m_is_selected;
+    bool m_is_single_plane;
+
     QVector3D calc_center();
 };
 

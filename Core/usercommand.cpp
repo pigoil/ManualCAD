@@ -89,11 +89,14 @@ void MCadCommand::PlaceLine::redo()
     QVector3D p2(m_p2.x(), m_p2.y(), 0);
 
     Entity entity;
+    Plane  plane;
 
     Line3d line(p1,p2);
+    plane.append(line);
 
-    entity.append(line);
+    entity.append(plane);
     entity.select(false);
+    entity.singlePlane(true);
     geo_tab->append(entity);
 }
 
@@ -164,10 +167,9 @@ void MCadCommand::PlaceCircle::redo()
     qreal radius = MCadUtil::distance(m_center,m_p2);
 
     Entity entity;
+    Plane  plane;
 
     QPointF point;
-    //QVector3D p1,p2;
-    //Line3d line;
     qreal step = 360.0/m_piece;
     for(int i=0; i<m_piece; ++i)
     {
@@ -175,10 +177,12 @@ void MCadCommand::PlaceCircle::redo()
         QVector3D p1 = QVector3D(point);
         point = calc_point(m_center,radius,step*(i+1)/180*3.141592654);
         QVector3D p2 = QVector3D(point);
-        Line3d line(p1,p2);
-        entity.append(line);
+        Line3d line(p2,p1);
+        plane.append(line);
     }
 
+    entity.append(plane);
+    entity.singlePlane(true);
     entity.select(false);
     geo_tab->append(entity);
 }
@@ -262,17 +266,21 @@ void MCadCommand::PlaceRect::redo()
     QVector3D p4(m_p2.x(), m_p1.y(), 0);
 
     Entity entity;
+    Plane  plane;
 
-    Line3d l1(p1,p4);
-    Line3d l2(p4,p2);
-    Line3d l3(p2,p3);
-    Line3d l4(p3,p1);
+    Line3d l1(p4,p1);
+    Line3d l2(p2,p4);
+    Line3d l3(p3,p2);
+    Line3d l4(p1,p3);
 
-    entity.append(l1);
-    entity.append(l2);
-    entity.append(l3);
-    entity.append(l4);
+    plane.append(l1);
+    plane.append(l2);
+    plane.append(l3);
+    plane.append(l4);
+
+    entity.append(plane);
     entity.select(false);
+    entity.singlePlane(true);
     geo_tab->append(entity);
 }
 
@@ -307,12 +315,17 @@ MCadCommand::Koch::Koch(QObject *parent):
 void MCadCommand::Koch::redo()
 {
     Entity entity;
-    koch(0,0,600,600,8,entity);
+    Plane  plane;
+
+    koch(0,0,600,600,8,plane);
+
+    entity.append(plane);
+    entity.singlePlane(true);
     entity.select(false);
     geo_tab->append(entity);
 }
 
-void MCadCommand::Koch::koch(int x1, int y1, int x2, int y2, int n, Entity &e)
+void MCadCommand::Koch::koch(int x1, int y1, int x2, int y2, int n, Plane &e)
 {
     if (n > 0)
     {
@@ -387,6 +400,8 @@ QString MCadCommand::Podetium::hint()
 {
     if(m_state == Idle)
         return QString("选取底面");
+    if(m_state == Busy)
+        return QString("点击空白处确定");
 
     return QString("");
 }
@@ -412,24 +427,40 @@ bool MCadCommand::Podetium::get_selection(Entity &selected)
 
 void MCadCommand::Podetium::create_podetium(Entity poly, float z)
 {
-    Entity oppsite = poly;
+    if(!poly.isSinglePlane())return;
+
     Entity entity;
+    Plane  top = poly.at(0);
+    Plane  bottom = top;
+    Plane  plane;
 
-    entity.append(poly);
+    entity.append(top);
 
-    for(Entity::iterator it = oppsite.begin() ; it!=oppsite.end() ; ++it)
+    for(Plane::iterator it = bottom.begin() ; it!=bottom.end() ; ++it)
     {
-        Line3d& line= *it;
-        QVector3D p1 = line.p1();
-
-        line.p1().setZ(z);
-        line.p2().setZ(z);
-
-        QVector3D p2 = line.p1();
-        Line3d edge(p1,p2);
-        entity.append(edge);
+        it->p1().setZ(-z);
+        it->p2().setZ(-z);
     }
-    entity.append(oppsite);
+
+    bottom.flip();
+    entity.append(bottom);
+
+    for(int i=0 ; i<bottom.count() ; ++i)
+    {
+        plane.clear();
+
+        Line3d t_edge = top.at(i);
+        Line3d b_edge = bottom.at(bottom.count() - i -1);
+        plane.append(t_edge);
+        plane.append(Line3d(t_edge.p2(),b_edge.p1()));
+        plane.append(b_edge);
+        plane.append(Line3d(b_edge.p2(),t_edge.p1()));
+        //plane.flip();
+        entity.append(plane);
+    }
+
+    entity.select(false);
+    entity.singlePlane(false);
     geo_tab->append(entity);
 }
 
@@ -473,6 +504,8 @@ QString MCadCommand::Cone::hint()
 {
     if(m_state == Idle)
         return QString("选取底面");
+    if(m_state == Busy)
+        return QString("点击空白处确定");
 
     return QString("");
 }
@@ -496,13 +529,13 @@ bool MCadCommand::Cone::get_selection(Entity &selected)
     return false;
 }
 
-QVector3D MCadCommand::Cone::get_center(Entity &poly)
+QVector3D MCadCommand::Cone::get_center(Plane &poly)
 {
     int edges = poly.count();
 
     QVector3D res(0,0,0);
 
-    for(Entity::iterator it=poly.begin() ; it!=poly.end() ; ++it)
+    for(Plane::iterator it=poly.begin() ; it!=poly.end() ; ++it)
     {
         res += it->p1();
     }
@@ -512,19 +545,32 @@ QVector3D MCadCommand::Cone::get_center(Entity &poly)
 
 void MCadCommand::Cone::create_cone(Entity poly, float z)
 {
+    if(!poly.isSinglePlane())return;
+
     Entity entity;
-    QVector3D center = get_center(poly);
-    center.setZ(z);
+    Plane  bottom = poly.at(0);
+    Plane  plane;
+    QVector3D center = get_center(bottom);
+    center.setZ(-z);
 
-    entity.append(poly);
+    entity.append(bottom);
 
-    for(Entity::iterator it = poly.begin() ; it!=poly.end() ; ++it)
+    for(Plane::iterator it = bottom.begin() ; it!=bottom.end() ; ++it)
     {
+        plane.clear();
         QVector3D p1 = it->p1();
-
-        Line3d edge(p1,center);
-        entity.append(edge);
+        QVector3D p2 = it->p2();
+        Line3d edge1(p2,center);
+        Line3d edge2(center,p1);
+        Line3d edge3(p1,p2);
+        plane.append(edge1);
+        plane.append(edge2);
+        plane.append(edge3);
+        //plane.flip();
+        entity.append(plane);
     }
 
+    entity.select(false);
+    entity.singlePlane(false);
     geo_tab->append(entity);
 }

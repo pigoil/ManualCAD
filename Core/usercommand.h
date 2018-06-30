@@ -171,7 +171,7 @@ public:
 private:
     QPointF m_p1,m_p2;
 
-    void koch(int x1, int y1, int x2, int y2, int n, Entity &e);
+    void koch(int x1, int y1, int x2, int y2, int n, Plane &e);
 };
 
 class Podetium : public UserCommand
@@ -218,7 +218,7 @@ public:
 
 private:
     bool get_selection(Entity& selected);
-    QVector3D get_center(Entity& poly);
+    QVector3D get_center(Plane &poly);
 
     Entity m_src;
     qreal m_deepth;

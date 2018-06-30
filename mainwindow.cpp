@@ -3,6 +3,7 @@
 
 #include <QHBoxLayout>
 #include <QMessageBox>
+#include <QCheckBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -43,6 +44,10 @@ MainWindow::MainWindow(QWidget *parent) :
     groupOther->addAction(ui->actionPodetium);
     groupOther->addAction(ui->actionAnimation);
     connect(groupOther,SIGNAL(triggered(QAction*)),mcad_widget,SLOT(startNewCommand(QAction*)));
+
+    QCheckBox* blankingBox = new QCheckBox("开启消隐",this);
+    ui->statusBar->addWidget(blankingBox);
+    connect(blankingBox,SIGNAL(toggled(bool)),mcad_widget,SLOT(setUseBlanking(bool)));
 }
 
 MainWindow::~MainWindow()
@@ -81,6 +86,7 @@ void MainWindow::on_actionAbout_triggered()
     QString title("关于MaunalCAD");
     QString text("<h1>Manual CAD</h1>"
                  "<h2>简介</h2>"
+                 "<font size=\"6\">"
                  "<p>基于Qt 5.8开发的CAD软件，特性：</p>"
                  "<ul>"
                  "<li>绘制二维线、矩形、圆、科赫曲线</li>"
@@ -89,11 +95,14 @@ void MainWindow::on_actionAbout_triggered()
                  "<li>非编辑状态下缩放、三维旋转、平移</li>"
                  "<li>非编辑状态下选中</li>"
                  "<li>可开关的消隐效果</li>"
-                 "<li>可开关的旋转动画</li>"
+                 "<li>可开关的单体旋转动画</li>"
                  "<li>三种可选绘图引擎</li>"
                  "</ul>"
+                 "</font>"
                  "<h2>组员</h2>"
+                 "<font size=\"4\">"
                  "<p>李康清、张逸鸿、何梓秋</p>"
+                 "<font>"
                 );
     QMessageBox::about(this,title,text);
 
