@@ -4,6 +4,7 @@
 #include <QAction>
 #include <QTimer>
 #include <QMatrix4x4>
+#include <QColorDialog>
 
 #include "mainwidget.h"
 #include "mcad_utils.h"
@@ -37,6 +38,10 @@ MCadWidget::MCadWidget(QWidget *parent) :
     m_command_action = NULL;
     m_animation_timer = new QTimer(this);
     connect(m_animation_timer,SIGNAL(timeout()),this,SLOT(rotating_animation()));
+
+    m_background_color = Qt::black;
+    m_selected_color   = Qt::yellow;
+    m_line_color       = Qt::green;
 }
 
 //绘制事件
@@ -50,7 +55,7 @@ void MCadWidget::paintEvent(QPaintEvent *e)
     else
         p.begin(this);
 
-    p.fillRect(e->rect(),Qt::black);//填充背景
+    p.fillRect(e->rect(),m_background_color);//填充背景
 
     if(m_command)
         m_command->paint(e,p,m_current_engine);//绘制当前命令
@@ -67,11 +72,11 @@ void MCadWidget::paintEvent(QPaintEvent *e)
     {
         if(entity.isSelected())//如果选中，画蓝色
         {
-            p.setPen(Qt::blue);
+            p.setPen(m_selected_color);
         }
         else
         {
-            p.setPen(Qt::green);
+            p.setPen(m_line_color);
         }
         entity.project(m_current_engine,p,m_view_vector,m_use_blanking);
     }
@@ -300,6 +305,10 @@ void MCadWidget::quit_current_command(QAction *action)
         action->setChecked(false);
     if(m_command)
         delete m_command;
+    if(m_animation_timer->isActive())
+    {
+        m_animation_timer->stop();
+    }
 
     emit displayHint("        ");
     m_command = NULL;
@@ -439,4 +448,39 @@ void MCadWidget::rotating_animation()
 void MCadWidget::setUseBlanking(bool b)
 {
     m_use_blanking = b;
+    update();
+}
+
+void MCadWidget::setColorOption(QAction *a)
+{
+    QColorDialog dlg;
+    if(a->objectName() == "actionLineColor")
+    {
+        dlg.setWindowTitle("选择线条颜色");
+        dlg.setCurrentColor(m_line_color);
+        if(dlg.exec())
+        {
+            m_line_color = dlg.currentColor();
+        }
+    }
+    else if(a->objectName() == "actionBackgroundColor")
+    {
+        dlg.setWindowTitle("选择背景颜色");
+        dlg.setCurrentColor(m_background_color);
+        if(dlg.exec())
+        {
+            m_background_color = dlg.currentColor();
+        }
+    }
+    else if(a->objectName() == "actionSelectedColor")
+    {
+        dlg.setWindowTitle("选择选中线条颜色");
+        dlg.setCurrentColor(m_selected_color);
+        if(dlg.exec())
+        {
+            m_selected_color = dlg.currentColor();
+        }
+    }
+
+    update();
 }

@@ -45,8 +45,11 @@ MainWindow::MainWindow(QWidget *parent) :
     groupOther->addAction(ui->actionAnimation);
     connect(groupOther,SIGNAL(triggered(QAction*)),mcad_widget,SLOT(startNewCommand(QAction*)));
 
+    connect(ui->menuColor,SIGNAL(triggered(QAction*)),mcad_widget,SLOT(setColorOption(QAction*)));
+
     QCheckBox* blankingBox = new QCheckBox("开启消隐",this);
     ui->statusBar->addWidget(blankingBox);
+
     connect(blankingBox,SIGNAL(toggled(bool)),mcad_widget,SLOT(setUseBlanking(bool)));
 }
 
@@ -97,6 +100,7 @@ void MainWindow::on_actionAbout_triggered()
                  "<li>可开关的消隐效果</li>"
                  "<li>可开关的单体旋转动画</li>"
                  "<li>三种可选绘图引擎</li>"
+                 "<li>可选背景色、线条颜色</li>"
                  "</ul>"
                  "</font>"
                  "<h2>组员</h2>"

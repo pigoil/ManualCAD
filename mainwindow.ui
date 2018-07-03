@@ -57,8 +57,18 @@
     <property name="title">
      <string>工具</string>
     </property>
+    <widget class="QMenu" name="menuColor">
+     <property name="title">
+      <string>颜色选项</string>
+     </property>
+     <addaction name="actionBackgroundColor"/>
+     <addaction name="actionLineColor"/>
+     <addaction name="actionSelectedColor"/>
+    </widget>
     <addaction name="actionDelete"/>
     <addaction name="actionAnimation"/>
+    <addaction name="separator"/>
+    <addaction name="menuColor"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_3"/>
@@ -205,6 +215,21 @@
    </property>
    <property name="text">
     <string>动画</string>
+   </property>
+  </action>
+  <action name="actionLineColor">
+   <property name="text">
+    <string>线条颜色</string>
+   </property>
+  </action>
+  <action name="actionSelectedColor">
+   <property name="text">
+    <string>选中颜色</string>
+   </property>
+  </action>
+  <action name="actionBackgroundColor">
+   <property name="text">
+    <string>背景色</string>
    </property>
   </action>
  </widget>

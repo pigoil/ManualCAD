@@ -54,6 +54,10 @@ private:
 
     QTimer*      m_animation_timer;
 
+    QColor       m_background_color;
+    QColor       m_line_color;
+    QColor       m_selected_color;
+
     void         raise_new_command(QAction* action);
     void         quit_current_command(QAction* action);
     void         quit_selection();
@@ -72,6 +76,7 @@ public slots:
 private slots:
     void rotating_animation();
     void setUseBlanking(bool b);
+    void setColorOption(QAction* a);
 };
 
 #endif // MAINWIDGET_H
